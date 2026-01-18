@@ -182,22 +182,22 @@ with mlflow.start_run():
     mlflow.log_artifact(model_path, artifact_path="model")
     print(f"Model saved as artifact at: {model_path}")
 
-    # -----------------------------
-    # Upload best model to HF Model Hub
-    # -----------------------------
-    try:
-        api.repo_info(repo_id=MODEL_REPO_ID, repo_type=REPO_TYPE_MODEL)
-        print(f"Model repo '{MODEL_REPO_ID}' already exists. Using it.")
-    except RepositoryNotFoundError:
-        print(f"Model repo '{MODEL_REPO_ID}' not found. Creating new repo...")
-        create_repo(repo_id=MODEL_REPO_ID, repo_type=REPO_TYPE_MODEL, private=False)
-        print(f"Model repo '{MODEL_REPO_ID}' created.")
+# -----------------------------
+# Upload best model to HF Model Hub
+# -----------------------------
+try:
+    api.repo_info(repo_id=MODEL_REPO_ID, repo_type=REPO_TYPE_MODEL)
+    print(f"Model repo '{MODEL_REPO_ID}' already exists. Using it.")
+except (RepositoryNotFoundError, HfHubHTTPError):
+    print(f"Model repo '{MODEL_REPO_ID}' not found. Creating new repo...")
+    api.create_repo(repo_id=MODEL_REPO_ID, repo_type=REPO_TYPE_MODEL, private=False)
+    print(f"Model repo '{MODEL_REPO_ID}' created.")
 
-    api.upload_file(
-        path_or_fileobj=model_path,
-        path_in_repo=model_path,
-        repo_id=MODEL_REPO_ID,
-        repo_type=REPO_TYPE_MODEL,
-    )
+api.upload_file(
+    path_or_fileobj=model_path,
+    path_in_repo=model_path,
+    repo_id=MODEL_REPO_ID,
+    repo_type=REPO_TYPE_MODEL,
+)
 
-    print(f"Uploaded model to Hugging Face: {MODEL_REPO_ID}")
+print(f"Uploaded model to Hugging Face: {MODEL_REPO_ID}")
