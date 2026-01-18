@@ -19,7 +19,7 @@ import mlflow
 
 from huggingface_hub import HfApi, create_repo
 from huggingface_hub.utils import RepositoryNotFoundError
-
+from huggingface_hub.utils import HfHubHTTPError
 
 # -----------------------------
 # MLflow settings (Production)
