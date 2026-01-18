@@ -14,6 +14,16 @@ jobs:
       - name: Install Dependencies
         run: pip install -r tourism_project/deployment/requirements.txt
 
+      - name: Debug HF token
+        run: |
+          if [ -z "$TPACKAGE_TOKEN" ]; then
+            echo "TPACKAGE_TOKEN is EMPTY"
+          else
+            echo "TPACKAGE_TOKEN is SET"
+          fi
+        env:
+          TPACKAGE_TOKEN: ${{ secrets.TPACKAGE_TOKEN }}  
+
       - name: Upload Dataset to Hugging Face Hub
         env:
           TPACKAGE_TOKEN: ${{ secrets.TPACKAGE_TOKEN }}
